@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- StreamBox logo: Stylized "S" with box -->
+    <group
+        android:translateX="27"
+        android:translateY="27">
+
+        <!-- Box outline -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M4,4 L50,4 L50,50 L4,50 Z M8,8 L8,46 L46,46 L46,8 Z" />
+
+        <!-- Stylized S -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M32,16 Q40,16 40,22 Q40,28 32,28 L22,28 Q18,28 18,32 Q18,36 22,36 L32,36 Q40,36 40,42 Q40,48 32,48 L18,48 L18,42 L32,42 Q34,42 34,40 Q34,38 32,38 L22,38 Q14,38 14,32 Q14,26 22,26 L32,26 Q34,26 34,24 Q34,22 32,22 L18,22 L18,16 Z" />
+
+    </group>
+</vector>
