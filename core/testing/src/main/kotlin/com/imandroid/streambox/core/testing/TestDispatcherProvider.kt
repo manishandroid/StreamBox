@@ -17,14 +17,14 @@ import kotlin.coroutines.CoroutineContext
  *
  * ### Basic Usage (Unconfined)
  * ```kotlin
- * class QuoteReducerTest {
+ * class HomeReducerTest {
  *     private val dispatcherProvider = TestDispatcherProvider()
- *     private val reducer = QuoteReducer(dispatcherProvider)
+ *     private val reducer = HomeReducer(dispatcherProvider)
  *
  *     @Test
  *     fun `when Load action then state is Loading`() = runTest {
- *         reducer.update(QuoteAction.Load)
- *         assertEquals(QuoteScreenState.Loading, reducer.state.value)
+ *         reducer.update(HomeAction.Load)
+ *         assertEquals(HomeState.Loading, reducer.state.value)
  *     }
  * }
  * ```
