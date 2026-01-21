@@ -2,7 +2,8 @@ package com.imandroid.streambox.core.testing
 
 import com.imandroid.streambox.core.architecture.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -15,16 +16,16 @@ import kotlin.coroutines.CoroutineContext
  *
  * ## Usage
  *
- * ### Basic Usage (Unconfined)
+ * ### Basic Usage (UnconfinedTestDispatcher)
  * ```kotlin
- * class QuoteReducerTest {
+ * class HomeReducerTest {
  *     private val dispatcherProvider = TestDispatcherProvider()
- *     private val reducer = QuoteReducer(dispatcherProvider)
+ *     private val reducer = HomeReducer(dispatcherProvider)
  *
  *     @Test
  *     fun `when Load action then state is Loading`() = runTest {
- *         reducer.update(QuoteAction.Load)
- *         assertEquals(QuoteScreenState.Loading, reducer.state.value)
+ *         reducer.update(HomeAction.Load)
+ *         assertEquals(HomeState.Loading, reducer.state.value)
  *     }
  * }
  * ```
@@ -47,7 +48,7 @@ import kotlin.coroutines.CoroutineContext
  *
  * ## Trade-offs
  *
- * **Unconfined (default):**
+ * **UnconfinedTestDispatcher (default):**
  * - Executes immediately, no need for advanceUntilIdle()
  * - Simpler test code
  * - May hide timing-related bugs
@@ -58,10 +59,11 @@ import kotlin.coroutines.CoroutineContext
  * - More verbose test code
  *
  * @param testDispatcher The dispatcher to use for all contexts.
- *                       Defaults to Unconfined for immediate execution.
+ *                       Defaults to UnconfinedTestDispatcher for immediate execution.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class TestDispatcherProvider(
-    testDispatcher: CoroutineDispatcher = Dispatchers.Unconfined
+    testDispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 ) : DispatcherProvider {
 
     override val main: CoroutineContext = testDispatcher

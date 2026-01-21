@@ -14,10 +14,10 @@ package com.imandroid.streambox.core.architecture
  *
  * ## Usage
  * ```kotlin
- * sealed class QuoteAction : Action {
- *     data object Load : QuoteAction()
- *     data class SetContent(val quote: Quote) : QuoteAction()
- *     data class SetError(val error: Throwable) : QuoteAction()
+ * sealed class HomeAction : Action {
+ *     data object Load : HomeAction()
+ *     data class ContentLoaded(val items: List<FeaturedContent>) : HomeAction()
+ *     data class LoadingFailed(val message: String) : HomeAction()
  * }
  * ```
  *

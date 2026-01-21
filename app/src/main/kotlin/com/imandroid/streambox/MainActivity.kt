@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.imandroid.streambox.core.designsystem.theme.StreamBoxTheme
-import com.imandroid.streambox.features.home.ui.HomeScreen
+import com.imandroid.streambox.features.home.ui.HomeRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    HomeScreen(
+                    HomeRoute(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)

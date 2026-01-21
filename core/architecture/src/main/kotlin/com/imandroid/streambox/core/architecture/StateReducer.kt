@@ -16,19 +16,19 @@ import kotlinx.coroutines.withContext
  *
  * ## Implementation Guide
  * ```kotlin
- * class QuoteReducer(
+ * class HomeReducer(
  *     dispatcherProvider: DispatcherProvider
- * ) : StateReducer<QuoteScreenState, QuoteAction>(
- *     initialState = QuoteScreenState.None,
+ * ) : StateReducer<HomeState, HomeAction>(
+ *     initialState = HomeState.Idle,
  *     dispatcherProvider = dispatcherProvider
  * ) {
  *     override fun reduce(
- *         action: QuoteAction,
- *         currentState: QuoteScreenState
- *     ): QuoteScreenState = when (action) {
- *         is QuoteAction.Load -> QuoteScreenState.Loading
- *         is QuoteAction.SetContent -> QuoteScreenState.Content(action.quote)
- *         is QuoteAction.SetError -> QuoteScreenState.Error(action.error.message)
+ *         action: HomeAction,
+ *         currentState: HomeState
+ *     ): HomeState = when (action) {
+ *         HomeAction.Load -> HomeState.Loading
+ *         is HomeAction.ContentLoaded -> HomeState.Content(action.items)
+ *         is HomeAction.LoadingFailed -> HomeState.Error(action.message)
  *     }
  * }
  * ```

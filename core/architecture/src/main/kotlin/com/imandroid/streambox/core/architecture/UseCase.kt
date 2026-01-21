@@ -27,14 +27,14 @@ import kotlinx.coroutines.flow.Flow
  * Use verb phrases: `Get`, `Create`, `Update`, `Delete`, `Observe`
  *
  * Examples:
- * - `GetQuoteUseCase` → returns `Result<Quote>`
+ * - `GetContentUseCase` → returns `Result<Content>`
  * - `ObserveSettingsUseCase` → returns `Flow<Settings>`
  * - `CreateProfileUseCase` → takes `ProfileData`, returns `Result<Profile>`
  *
  * ## Return Types
  * Always wrap fallible operations in `Result<T>`:
  * ```kotlin
- * interface GetQuoteUseCase : UseCase.Suspending<Result<Quote>>
+ * interface GetContentUseCase : UseCase.Suspending<Result<Content>>
  * ```
  *
  * This makes error handling explicit at the call site.

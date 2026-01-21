@@ -96,7 +96,7 @@ Each branch adds **exactly one concept** on top of `main`:
 | Order | Branch | Focus |
 |-------|--------|-------|
 | 1 | `main` | Base app (this branch) |
-| 2 | `feature/reducer-basics` | State + Action + Reducer for Quote of Day |
+| 2 | `feature/reducer-basics` | State + Action + Reducer for home screen |
 | 3 | `feature/use-case-layer` | Domain layer with UseCase pattern |
 | 4 | `feature/mapper-pattern` | Layer transformation with Mapper |
 | 5 | `feature/repository-pattern` | Data layer abstraction |
@@ -133,14 +133,14 @@ StreamBox follows production-grade testing strategy:
 ### Test Infrastructure
 ```kotlin
 // TestDispatcherProvider for deterministic tests
-class QuoteReducerTest {
+class HomeReducerTest {
     private val dispatcherProvider = TestDispatcherProvider()
-    private val reducer = QuoteReducer(dispatcherProvider)
+    private val reducer = HomeReducer(dispatcherProvider)
 
     @Test
     fun `Load action transitions to Loading state`() = runTest {
-        reducer.update(QuoteAction.Load)
-        assertEquals(QuoteScreenState.Loading, reducer.state.value)
+        reducer.update(HomeAction.Load)
+        assertEquals(HomeState.Loading, reducer.state.value)
     }
 }
 ```

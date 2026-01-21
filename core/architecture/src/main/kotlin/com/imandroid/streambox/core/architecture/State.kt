@@ -11,11 +11,11 @@ package com.imandroid.streambox.core.architecture
  * ## Usage
  * Feature states should be modeled as sealed classes:
  * ```kotlin
- * sealed class QuoteScreenState : State {
- *     data object None : QuoteScreenState()
- *     data object Loading : QuoteScreenState()
- *     data class Content(val quote: Quote) : QuoteScreenState()
- *     data class Error(val message: String) : QuoteScreenState()
+ * sealed class HomeState : State {
+ *     data object Idle : HomeState()
+ *     data object Loading : HomeState()
+ *     data class Content(val items: List<FeaturedContent>) : HomeState()
+ *     data class Error(val message: String) : HomeState()
  * }
  * ```
  *

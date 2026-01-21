@@ -7,32 +7,37 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.imandroid.streambox.core.designsystem.theme.AppTheme
 import com.imandroid.streambox.core.designsystem.theme.StreamBoxTheme
+import com.imandroid.streambox.core.ui.components.LoadingIndicator
 
-/**
- * Home screen placeholder for StreamBox.
- *
- * ## Current State (main branch)
- * This is a static placeholder screen that proves the app compiles and runs.
- * It demonstrates the design system integration with AppTheme.
- *
- * ## Future Development
- * In feature branches, this will evolve to:
- * - `feature/reducer-basics`: Add state management with reducer
- * - `feature/network-integration`: Display data from API
- * - `feature/content-list`: Full content browsing experience
- *
- * @param modifier Modifier for the screen container
- */
+@Composable
+fun HomeRoute(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    HomeScreen(
+        state = state,
+        onAction = viewModel::onAction,
+        modifier = modifier
+    )
+}
+
 @Composable
 fun HomeScreen(
+    state: HomeState,
+    onAction: (HomeAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -41,37 +46,105 @@ fun HomeScreen(
             .background(AppTheme.colors.background.primary),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            // App title
-            Text(
-                text = "StreamBox",
-                style = AppTheme.typography.displayMedium,
-                color = AppTheme.colors.text.primary,
-                textAlign = TextAlign.Center
-            )
+        when (state) {
+            HomeState.Idle -> HomeIdle(onAction = onAction)
+            HomeState.Loading -> LoadingIndicator()
+            is HomeState.Content -> HomeContent(items = state.items)
+            is HomeState.Error -> HomeError(message = state.message, onAction = onAction)
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(AppTheme.spacers.sm))
+@Composable
+private fun HomeIdle(
+    onAction: (HomeAction) -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "StreamBox",
+            style = AppTheme.typography.displayMedium,
+            color = AppTheme.colors.text.primary,
+            textAlign = TextAlign.Center
+        )
 
-            // Subtitle
+        Spacer(modifier = Modifier.height(AppTheme.spacers.sm))
+
+        Text(
+            text = "Ready to load featured content",
+            style = AppTheme.typography.bodyLarge,
+            color = AppTheme.colors.text.secondary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(AppTheme.spacers.xl))
+
+        Button(onClick = { onAction(HomeAction.Load) }) {
+            Text(text = "Load")
+        }
+    }
+}
+
+@Composable
+private fun HomeContent(
+    items: List<FeaturedContent>
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Featured picks",
+            style = AppTheme.typography.displayMedium,
+            color = AppTheme.colors.text.primary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(AppTheme.spacers.lg))
+
+        items.forEach { item ->
             Text(
-                text = "Production Pattern Learning App",
+                text = "${item.title} • ${item.year} • ${item.category}",
                 style = AppTheme.typography.bodyLarge,
                 color = AppTheme.colors.text.secondary,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(AppTheme.spacers.sm))
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(AppTheme.spacers.xl))
+@Composable
+private fun HomeError(
+    message: String,
+    onAction: (HomeAction) -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Something went wrong",
+            style = AppTheme.typography.displayMedium,
+            color = AppTheme.colors.text.primary,
+            textAlign = TextAlign.Center
+        )
 
-            // Branch indicator
-            Text(
-                text = "Branch: main",
-                style = AppTheme.typography.labelMedium,
-                color = AppTheme.colors.brand.primary,
-                textAlign = TextAlign.Center
-            )
+        Spacer(modifier = Modifier.height(AppTheme.spacers.sm))
+
+        Text(
+            text = message,
+            style = AppTheme.typography.bodyLarge,
+            color = AppTheme.colors.text.secondary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(AppTheme.spacers.lg))
+
+        Button(onClick = { onAction(HomeAction.Retry) }) {
+            Text(text = "Retry")
         }
     }
 }
@@ -80,6 +153,14 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     StreamBoxTheme {
-        HomeScreen()
+        HomeScreen(
+            state = HomeState.Content(
+                listOf(
+                    FeaturedContent("Night Signal", "2024", "Sci-Fi"),
+                    FeaturedContent("Harborline", "2023", "Drama")
+                )
+            ),
+            onAction = {}
+        )
     }
 }

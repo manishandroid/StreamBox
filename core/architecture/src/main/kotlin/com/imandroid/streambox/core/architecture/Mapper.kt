@@ -14,17 +14,17 @@ package com.imandroid.streambox.core.architecture
  * Follow the pattern: `{Source}To{Target}Mapper`
  *
  * Examples:
- * - `QuoteNetToQuoteMapper` (network → domain)
- * - `QuoteToContentStateMapper` (domain → presentation)
+ * - `ContentNetToContentMapper` (network → domain)
+ * - `ContentToUiStateMapper` (domain → presentation)
  * - `ProfileEntityToProfileMapper` (persistence → domain)
  *
  * ## Usage
  * ```kotlin
- * class QuoteNetToQuoteMapper : Mapper<QuoteNet, Quote> {
- *     override fun map(input: QuoteNet): Quote = Quote(
+ * class ContentNetToContentMapper : Mapper<ContentNet, Content> {
+ *     override fun map(input: ContentNet): Content = Content(
  *         id = input.id,
- *         text = input.text,
- *         author = input.author.orEmpty()
+ *         title = input.title,
+ *         category = input.category
  *     )
  * }
  * ```

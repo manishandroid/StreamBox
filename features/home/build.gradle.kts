@@ -41,10 +41,14 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Debug
     debugImplementation(libs.compose.ui.tooling)
 
     // Testing
+    testImplementation(project(":core:testing"))
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
 }
