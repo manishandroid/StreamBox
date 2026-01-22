@@ -1,40 +1,36 @@
-# StreamBox - Reducer Basics
+# StreamBox - Use Case Layer
 
-This branch introduces a minimal, production-style StateReducer setup for a
-single placeholder screen. It focuses on the reducer pattern itself: actions
-flow in, state flows out, and the UI simply renders what it observes.
+This branch introduces the UseCase layer for the home feature. The goal is to
+move business decisions out of the ViewModel while keeping reducers pure and
+state-driven UI intact.
 
-## What a StateReducer Is
-A StateReducer is a pure function wrapped in a small state container. It:
+## Why UseCases Now
+UseCases sit between UI and data. They:
 
-- Receives an **Action**
-- Combines it with the **current State**
-- Produces a **new State** without side effects
+- Express a single, focused operation
+- Provide clear input and output
+- Keep business rules out of ViewModels
+- Stay framework-agnostic and easy to test
 
-This makes state transitions predictable, testable, and easy to reason about.
+At this stage, the data is still static. The point is the flow and boundaries.
 
-## Why This Pattern Scales
-Large apps benefit from reducers because they:
+## What Changed
+- A domain model for home content
+- A UseCase that returns home content
+- ViewModel delegates work to the UseCase
+- ViewModel translates results into reducer actions
 
-- Centralize state transitions in one place
-- Keep UI logic minimal and declarative
-- Make it easy to test each state change in isolation
-- Support unidirectional data flow across teams and features
+The reducer remains unchanged: it only transforms state from actions.
 
 ## Files to Read First
-- `core/architecture/StateReducer.kt` (base reducer contract)
-- `features/home/ui/HomeAction.kt` (actions)
-- `features/home/ui/HomeState.kt` (state model)
-- `features/home/ui/HomeReducer.kt` (pure transitions)
-- `features/home/ui/HomeViewModel.kt` (action coordination)
-- `features/home/ui/HomeScreen.kt` (state-driven UI)
+- `features/home/domain/usecase/LoadHomeContentUseCase.kt`
+- `features/home/ui/HomeViewModel.kt`
+- `features/home/ui/HomeAction.kt`
+- `features/home/ui/HomeReducer.kt`
+- `features/home/ui/HomeState.kt`
 
-## How This Sets the Foundation
-The home screen now demonstrates:
+## Production-Style Flow
+UI event -> ViewModel -> UseCase -> reducer action -> StateFlow -> UI
 
-- Unidirectional data flow (UI -> Action -> Reducer -> State -> UI)
-- Immutable state updates
-- Clear separation between user events and state transitions
-
-Later branches will introduce real data sources, use cases, and persistence on
-top of this reducer foundation.
+This mirrors the production pattern where the ViewModel coordinates and the
+UseCase owns business intent.

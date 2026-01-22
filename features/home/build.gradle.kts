@@ -44,6 +44,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+
     // Debug
     debugImplementation(libs.compose.ui.tooling)
 

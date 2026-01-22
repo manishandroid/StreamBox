@@ -16,7 +16,7 @@ package com.imandroid.streambox.core.architecture
  * ```kotlin
  * sealed class HomeAction : Action {
  *     data object Load : HomeAction()
- *     data class ContentLoaded(val items: List<FeaturedContent>) : HomeAction()
+ *     data class ContentLoaded(val items: List<HomeContent>) : HomeAction()
  *     data class LoadingFailed(val message: String) : HomeAction()
  * }
  * ```

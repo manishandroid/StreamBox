@@ -14,7 +14,7 @@ package com.imandroid.streambox.core.architecture
  * sealed class HomeState : State {
  *     data object Idle : HomeState()
  *     data object Loading : HomeState()
- *     data class Content(val items: List<FeaturedContent>) : HomeState()
+ *     data class Content(val items: List<HomeContent>) : HomeState()
  *     data class Error(val message: String) : HomeState()
  * }
  * ```

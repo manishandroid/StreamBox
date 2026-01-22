@@ -3,25 +3,21 @@ package com.imandroid.streambox.features.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imandroid.streambox.core.architecture.DispatcherProvider
+import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCase
+import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCaseImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider,
+    private val loadHomeContentUseCase: LoadHomeContentUseCase = LoadHomeContentUseCaseImpl()
 ) : ViewModel() {
 
     private val reducer = HomeReducer(dispatcherProvider)
 
     val state: StateFlow<HomeState> = reducer.state
-
-    private val placeholderItems = listOf(
-        FeaturedContent(title = "Night Signal", year = "2024", category = "Sci-Fi"),
-        FeaturedContent(title = "Harborline", year = "2023", category = "Drama"),
-        FeaturedContent(title = "Glass District", year = "2022", category = "Thriller")
-    )
 
     fun onAction(action: HomeAction) {
         when (action) {
@@ -35,9 +31,12 @@ class HomeViewModel(
     private fun loadContent() {
         viewModelScope.launch {
             reducer.update(HomeAction.Load)
-            // Simulate async work so the loading state is visible without real data.
-            delay(1200L)
-            reducer.update(HomeAction.ContentLoaded(placeholderItems))
+            val result = loadHomeContentUseCase()
+            val nextAction = result.fold(
+                onSuccess = { HomeAction.ContentLoaded(it) },
+                onFailure = { HomeAction.LoadingFailed(it.message ?: "Unable to load content") }
+            )
+            reducer.update(nextAction)
         }
     }
 
