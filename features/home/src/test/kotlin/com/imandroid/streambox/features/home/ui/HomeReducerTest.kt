@@ -1,7 +1,7 @@
 package com.imandroid.streambox.features.home.ui
 
 import com.imandroid.streambox.core.testing.TestDispatcherProvider
-import com.imandroid.streambox.features.home.domain.HomeContent
+import com.imandroid.streambox.features.home.ui.model.HomeContentUi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -29,7 +29,7 @@ class HomeReducerTest {
     fun `content loaded action transitions to Content state`() {
         runBlocking {
             val items = listOf(
-                HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi")
+                HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi")
             )
 
             reducer.update(HomeAction.ContentLoaded(items))

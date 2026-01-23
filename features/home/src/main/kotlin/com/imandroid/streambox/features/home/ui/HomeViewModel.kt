@@ -3,8 +3,13 @@ package com.imandroid.streambox.features.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imandroid.streambox.core.architecture.DispatcherProvider
+import com.imandroid.streambox.core.architecture.Mapper
+import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCase
 import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCaseImpl
+import com.imandroid.streambox.features.home.mapper.HomeContentUiListMapper
+import com.imandroid.streambox.features.home.mapper.HomeContentUiMapper
+import com.imandroid.streambox.features.home.ui.model.HomeContentUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,7 +17,9 @@ import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider,
-    private val loadHomeContentUseCase: LoadHomeContentUseCase = LoadHomeContentUseCaseImpl()
+    private val loadHomeContentUseCase: LoadHomeContentUseCase = LoadHomeContentUseCaseImpl(),
+    private val homeContentUiMapper: Mapper<List<HomeContent>, List<HomeContentUi>> =
+        HomeContentUiListMapper(HomeContentUiMapper())
 ) : ViewModel() {
 
     private val reducer = HomeReducer(dispatcherProvider)
@@ -33,7 +40,7 @@ class HomeViewModel(
             reducer.update(HomeAction.Load)
             val result = loadHomeContentUseCase()
             val nextAction = result.fold(
-                onSuccess = { HomeAction.ContentLoaded(it) },
+                onSuccess = { HomeAction.ContentLoaded(homeContentUiMapper.map(it)) },
                 onFailure = { HomeAction.LoadingFailed(it.message ?: "Unable to load content") }
             )
             reducer.update(nextAction)

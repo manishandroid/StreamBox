@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.imandroid.streambox.core.designsystem.theme.AppTheme
 import com.imandroid.streambox.core.designsystem.theme.StreamBoxTheme
 import com.imandroid.streambox.core.ui.components.LoadingIndicator
-import com.imandroid.streambox.features.home.domain.HomeContent
+import com.imandroid.streambox.features.home.ui.model.HomeContentUi
 
 @Composable
 fun HomeRoute(
@@ -90,7 +90,7 @@ private fun HomeIdle(
 
 @Composable
 private fun HomeContent(
-    items: List<HomeContent>
+    items: List<HomeContentUi>
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -157,8 +157,8 @@ private fun HomeScreenPreview() {
         HomeScreen(
             state = HomeState.Content(
                 listOf(
-                    HomeContent("Night Signal", "2024", "Sci-Fi"),
-                    HomeContent("Harborline", "2023", "Drama")
+                    HomeContentUi("Night Signal", "2024", "Sci-Fi"),
+                    HomeContentUi("Harborline", "2023", "Drama")
                 )
             ),
             onAction = {}
