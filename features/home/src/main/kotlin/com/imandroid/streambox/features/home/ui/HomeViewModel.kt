@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imandroid.streambox.core.architecture.DispatcherProvider
 import com.imandroid.streambox.core.architecture.Mapper
+import com.imandroid.streambox.features.home.data.HomeContentRepositoryImpl
 import com.imandroid.streambox.features.home.domain.HomeContent
+import com.imandroid.streambox.features.home.domain.repository.HomeContentRepository
 import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCase
 import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCaseImpl
 import com.imandroid.streambox.features.home.mapper.HomeContentUiListMapper
@@ -17,7 +19,9 @@ import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider,
-    private val loadHomeContentUseCase: LoadHomeContentUseCase = LoadHomeContentUseCaseImpl(),
+    private val homeContentRepository: HomeContentRepository = HomeContentRepositoryImpl(),
+    private val loadHomeContentUseCase: LoadHomeContentUseCase =
+        LoadHomeContentUseCaseImpl(homeContentRepository),
     private val homeContentUiMapper: Mapper<List<HomeContent>, List<HomeContentUi>> =
         HomeContentUiListMapper(HomeContentUiMapper())
 ) : ViewModel() {
