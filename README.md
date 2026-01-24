@@ -1,26 +1,28 @@
-# StreamBox - Repository Pattern
+# StreamBox - Network Integration (Ktor)
 
-This branch introduces the Repository pattern to decouple the domain layer from
-data sources. UseCases now depend on repository interfaces, not concrete data.
+This branch introduces real network-backed data using Ktor. The goal is to
+replace in-memory data with a clean, isolated network layer while keeping the
+Repository, UseCase, Mapper, and Reducer responsibilities intact.
 
-## Why Repositories Now
-Repositories define how the domain accesses data without revealing the source.
-This keeps UseCases focused on business intent and prepares the app for real
-API integration later.
+## Why Network Integration Now
+Repositories are already abstracted and UseCases already depend on interfaces.
+That makes this the natural point to swap in a real data source without
+changing any upstream logic.
 
 ## What Changed
-- Domain repository interface for home content
-- In-memory repository implementation with deterministic data
-- UseCase depends on the repository interface
-- Mapper and reducer flow remains unchanged
+- Shared Ktor client configuration in `core:network`
+- Network API and DTOs introduced for content listing
+- DTO -> Domain mapping stays inside the data layer
+- Repository now calls the network API and returns domain models
 
 ## Files to Read First
-- `features/home/domain/repository/HomeContentRepository.kt`
+- `core/network/src/main/kotlin/com/imandroid/streambox/core/network/KtorClientProvider.kt`
+- `features/home/data/network/HomeNetworkModule.kt`
+- `features/home/data/network/KtorHomeContentApi.kt`
+- `features/home/data/network/dto/HomeContentDto.kt`
+- `features/home/data/mapper/HomeContentDtoMapper.kt`
 - `features/home/data/HomeContentRepositoryImpl.kt`
-- `features/home/domain/usecase/LoadHomeContentUseCase.kt`
-- `features/home/mapper/HomeContentUiMapper.kt`
-- `features/home/ui/HomeViewModel.kt`
 
 ## Flow Summary
-UI event -> ViewModel -> UseCase -> Repository -> Domain model
--> Mapper -> Reducer action -> StateFlow -> UI
+UI event -> ViewModel -> UseCase -> Repository -> Ktor API -> DTO
+-> DTO mapper -> Domain model -> UI mapper -> Reducer action -> StateFlow -> UI

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import com.imandroid.streambox.core.designsystem.theme.AppTheme
 import com.imandroid.streambox.core.designsystem.theme.StreamBoxTheme
 import com.imandroid.streambox.core.ui.components.LoadingIndicator
@@ -92,20 +95,25 @@ private fun HomeIdle(
 private fun HomeContent(
     items: List<HomeContentUi>
 ) {
-    Column(
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = AppTheme.spacers.lg, vertical = AppTheme.spacers.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
-        Text(
-            text = "Featured picks",
-            style = AppTheme.typography.displayMedium,
-            color = AppTheme.colors.text.primary,
-            textAlign = TextAlign.Center
-        )
+        item {
+            Text(
+                text = "Featured picks",
+                style = AppTheme.typography.displayMedium,
+                color = AppTheme.colors.text.primary,
+                textAlign = TextAlign.Center
+            )
 
-        Spacer(modifier = Modifier.height(AppTheme.spacers.lg))
+            Spacer(modifier = Modifier.height(AppTheme.spacers.lg))
+        }
 
-        items.forEach { item ->
+        items(items) { item ->
             Text(
                 text = "${item.title} • ${item.year} • ${item.category}",
                 style = AppTheme.typography.bodyLarge,

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -31,6 +32,7 @@ dependencies {
     // Project modules
     implementation(project(":core:architecture"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:network"))
     implementation(project(":core:ui"))
 
     // Compose
@@ -47,11 +49,17 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
 
+    implementation(libs.kotlinx.serialization.json)
+
     // Debug
     debugImplementation(libs.compose.ui.tooling)
 
     // Testing
     testImplementation(project(":core:testing"))
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.ktor.client.content.negotiation)
+    testImplementation(libs.ktor.serialization.kotlinx.json)
+    testImplementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit)
 }
