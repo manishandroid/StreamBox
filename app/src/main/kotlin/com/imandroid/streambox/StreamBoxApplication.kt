@@ -1,6 +1,7 @@
 package com.imandroid.streambox
 
 import android.app.Application
+import com.imandroid.streambox.db.StreamBoxDatabaseProvider
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -19,4 +20,10 @@ import dagger.hilt.android.HiltAndroidApp
  * will be added in feature branches as needed.
  */
 @HiltAndroidApp
-class StreamBoxApplication : Application()
+class StreamBoxApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        StreamBoxDatabaseProvider.init(this)
+    }
+}

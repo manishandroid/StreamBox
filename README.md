@@ -1,28 +1,32 @@
-# StreamBox - Network Integration (Ktor)
+# StreamBox - Offline Room Database
 
-This branch introduces real network-backed data using Ktor. The goal is to
-replace in-memory data with a clean, isolated network layer while keeping the
-Repository, UseCase, Mapper, and Reducer responsibilities intact.
+This branch introduces shared Room database infrastructure. The goal is to make
+Room available as a durable local store without changing any repository or
+business logic yet.
 
-## Why Network Integration Now
-Repositories are already abstracted and UseCases already depend on interfaces.
-That makes this the natural point to swap in a real data source without
-changing any upstream logic.
+## Why Room Now
+Room is added early so later features can store offline data safely. This
+prepares the app for offline browsing while keeping the current flow
+network-first.
 
-## What Changed
-- Shared Ktor client configuration in `core:network`
-- Network API and DTOs introduced for content listing
-- DTO -> Domain mapping stays inside the data layer
-- Repository now calls the network API and returns domain models
+## What This Branch Adds
+- Shared Room infrastructure module in `core:database`
+- Single app database definition in `app` with feature entities/DAOs
+- Feature-local entities and DAOs for home content
+- LocalDataSource abstraction wrapping the DAO
+- Database provider for creating/injecting the DB
+
+## What This Branch Does NOT Do
+- No mediator or fallback logic
+- No repository reads from Room
+- No changes to UseCases, reducers, or UI
+- No caching strategy or pagination
 
 ## Files to Read First
-- `core/network/src/main/kotlin/com/imandroid/streambox/core/network/KtorClientProvider.kt`
-- `features/home/data/network/HomeNetworkModule.kt`
-- `features/home/data/network/KtorHomeContentApi.kt`
-- `features/home/data/network/dto/HomeContentDto.kt`
-- `features/home/data/mapper/HomeContentDtoMapper.kt`
-- `features/home/data/HomeContentRepositoryImpl.kt`
+- `core/database/src/main/kotlin/com/imandroid/streambox/core/database/RoomDatabaseFactory.kt`
+- `app/src/main/kotlin/com/imandroid/streambox/db/StreamBoxDatabase.kt`
+- `app/src/main/kotlin/com/imandroid/streambox/db/StreamBoxDatabaseProvider.kt`
+- `features/home/data/local/db/HomeContentDao.kt`
+- `features/home/data/local/db/HomeContentEntity.kt`
+- `features/home/data/local/HomeContentLocalDataSource.kt`
 
-## Flow Summary
-UI event -> ViewModel -> UseCase -> Repository -> Ktor API -> DTO
--> DTO mapper -> Domain model -> UI mapper -> Reducer action -> StateFlow -> UI
