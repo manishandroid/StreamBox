@@ -2,6 +2,7 @@ package com.imandroid.streambox
 
 import android.app.Application
 import com.imandroid.streambox.db.StreamBoxDatabaseProvider
+import com.imandroid.streambox.features.home.data.local.db.HomeDatabaseAccessor
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -25,5 +26,6 @@ class StreamBoxApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         StreamBoxDatabaseProvider.init(this)
+        HomeDatabaseAccessor.init { StreamBoxDatabaseProvider.get().homeContentDao() }
     }
 }

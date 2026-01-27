@@ -1,32 +1,28 @@
-# StreamBox - Offline Room Database
+# StreamBox - Offline Mediator
 
-This branch introduces shared Room database infrastructure. The goal is to make
-Room available as a durable local store without changing any repository or
-business logic yet.
+This branch introduces the mediator that coordinates remote and local data
+sources. The goal is to keep repositories thin while adding network-first,
+DB-fallback behavior for offline browsing.
 
-## Why Room Now
-Room is added early so later features can store offline data safely. This
-prepares the app for offline browsing while keeping the current flow
-network-first.
+## Why Mediator Logic Is Separate
+Persistence infrastructure and coordination logic are different concerns. This
+branch focuses only on decision flow between sources without changing UI,
+reducers, or UseCase contracts.
 
-## What This Branch Adds
-- Shared Room infrastructure module in `core:database`
-- Single app database definition in `app` with feature entities/DAOs
-- Feature-local entities and DAOs for home content
-- LocalDataSource abstraction wrapping the DAO
-- Database provider for creating/injecting the DB
-
-## What This Branch Does NOT Do
-- No mediator or fallback logic
-- No repository reads from Room
-- No changes to UseCases, reducers, or UI
-- No caching strategy or pagination
+## What Changed
+- Feature-specific offline mediator in the data layer
+- RemoteDataSource and LocalDataSource orchestration
+- Repository delegates to mediator
+- Strict mapping boundaries preserved
 
 ## Files to Read First
-- `core/database/src/main/kotlin/com/imandroid/streambox/core/database/RoomDatabaseFactory.kt`
-- `app/src/main/kotlin/com/imandroid/streambox/db/StreamBoxDatabase.kt`
-- `app/src/main/kotlin/com/imandroid/streambox/db/StreamBoxDatabaseProvider.kt`
-- `features/home/data/local/db/HomeContentDao.kt`
-- `features/home/data/local/db/HomeContentEntity.kt`
+- `features/home/data/mediator/HomeOfflineMediator.kt`
+- `features/home/data/mediator/HomeOfflineMediatorImpl.kt`
+- `features/home/data/remote/HomeContentRemoteDataSource.kt`
 - `features/home/data/local/HomeContentLocalDataSource.kt`
+- `features/home/data/HomeContentRepositoryImpl.kt`
 
+## Flow Summary
+UI event -> ViewModel -> UseCase -> Repository -> OfflineMediator
+-> RemoteDataSource / LocalDataSource -> Domain models -> UI mapper
+-> Reducer action -> StateFlow -> UI

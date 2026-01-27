@@ -21,3 +21,17 @@ class HomeContentDomainToEntityMapper : Mapper<HomeContent, HomeContentEntity> {
         imageUrl = null
     )
 }
+
+class HomeContentEntityListMapper(
+    private val itemMapper: Mapper<HomeContentEntity, HomeContent>
+) : Mapper<List<HomeContentEntity>, List<HomeContent>> {
+    override fun map(input: List<HomeContentEntity>): List<HomeContent> =
+        input.map(itemMapper::map)
+}
+
+class HomeContentDomainListToEntityMapper(
+    private val itemMapper: Mapper<HomeContent, HomeContentEntity>
+) : Mapper<List<HomeContent>, List<HomeContentEntity>> {
+    override fun map(input: List<HomeContent>): List<HomeContentEntity> =
+        input.map(itemMapper::map)
+}

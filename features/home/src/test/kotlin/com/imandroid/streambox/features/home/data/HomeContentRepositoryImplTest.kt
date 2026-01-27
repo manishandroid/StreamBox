@@ -1,10 +1,8 @@
 package com.imandroid.streambox.features.home.data
 
 import com.imandroid.streambox.core.testing.TestDispatcherProvider
-import com.imandroid.streambox.features.home.data.mapper.HomeContentDtoListMapper
-import com.imandroid.streambox.features.home.data.mapper.HomeContentDtoMapper
-import com.imandroid.streambox.features.home.data.network.HomeContentApi
-import com.imandroid.streambox.features.home.data.network.dto.HomeContentDto
+import com.imandroid.streambox.features.home.data.mediator.HomeOfflineMediator
+import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.HomeContentLoadException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -17,42 +15,41 @@ class HomeContentRepositoryImplTest {
 
     @Test
     fun `maps network content to domain content`() = runTest {
+        val mediator = FakeMediator(Result.success(listOf(HomeContent("Night Signal", "2024", "Sci-Fi"))))
         val repository = HomeContentRepositoryImpl(
-            api = FakeHomeContentApi(),
-            mapper = HomeContentDtoListMapper(HomeContentDtoMapper()),
+            mediator = mediator,
             dispatcherProvider = TestDispatcherProvider()
         )
 
         val result = repository.loadHomeContent()
 
         assertTrue(result.isSuccess)
-        assertEquals(2, result.getOrThrow().size)
+        assertEquals(1, mediator.invocations)
+        assertEquals(1, result.getOrThrow().size)
     }
 
     @Test
     fun `returns domain failure on network error`() = runTest {
+        val mediator = FakeMediator(Result.failure(HomeContentLoadException()))
         val repository = HomeContentRepositoryImpl(
-            api = FailingHomeContentApi(),
-            mapper = HomeContentDtoListMapper(HomeContentDtoMapper()),
+            mediator = mediator,
             dispatcherProvider = TestDispatcherProvider()
         )
 
         val result = repository.loadHomeContent()
 
         assertTrue(result.isFailure)
+        assertEquals(1, mediator.invocations)
         assertTrue(result.exceptionOrNull() is HomeContentLoadException)
     }
 }
 
-private class FakeHomeContentApi : HomeContentApi {
-    override suspend fun fetchHomeContent(): List<HomeContentDto> = listOf(
-        HomeContentDto(name = "Night Signal", premiered = "2024-01-01", genres = listOf("Sci-Fi")),
-        HomeContentDto(name = "Harborline", premiered = "2023-02-01", genres = listOf("Drama"))
-    )
-}
-
-private class FailingHomeContentApi : HomeContentApi {
-    override suspend fun fetchHomeContent(): List<HomeContentDto> {
-        throw IllegalStateException("Network failed")
+private class FakeMediator(
+    private val result: Result<List<HomeContent>>
+) : HomeOfflineMediator {
+    var invocations: Int = 0
+    override suspend fun loadHomeContent(): Result<List<HomeContent>> {
+        invocations += 1
+        return result
     }
 }

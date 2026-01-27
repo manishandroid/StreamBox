@@ -5,9 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.imandroid.streambox.core.architecture.DispatcherProvider
 import com.imandroid.streambox.core.architecture.Mapper
 import com.imandroid.streambox.features.home.data.HomeContentRepositoryImpl
+import com.imandroid.streambox.features.home.data.local.HomeContentLocalDataSourceImpl
+import com.imandroid.streambox.features.home.data.local.db.HomeDatabaseAccessor
+import com.imandroid.streambox.features.home.data.local.mapper.HomeContentDomainListToEntityMapper
+import com.imandroid.streambox.features.home.data.local.mapper.HomeContentDomainToEntityMapper
+import com.imandroid.streambox.features.home.data.local.mapper.HomeContentEntityListMapper
+import com.imandroid.streambox.features.home.data.local.mapper.HomeContentEntityToDomainMapper
 import com.imandroid.streambox.features.home.data.mapper.HomeContentDtoListMapper
 import com.imandroid.streambox.features.home.data.mapper.HomeContentDtoMapper
+import com.imandroid.streambox.features.home.data.mediator.HomeOfflineMediatorImpl
 import com.imandroid.streambox.features.home.data.network.HomeNetworkModule
+import com.imandroid.streambox.features.home.data.remote.HomeContentRemoteDataSourceImpl
 import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.repository.HomeContentRepository
 import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCase
@@ -23,8 +31,17 @@ import kotlin.coroutines.CoroutineContext
 class HomeViewModel(
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider,
     private val homeContentRepository: HomeContentRepository = HomeContentRepositoryImpl(
-        api = HomeNetworkModule.provideHomeContentApi(),
-        mapper = HomeContentDtoListMapper(HomeContentDtoMapper()),
+        mediator = HomeOfflineMediatorImpl(
+            remoteDataSource = HomeContentRemoteDataSourceImpl(
+                api = HomeNetworkModule.provideHomeContentApi()
+            ),
+            localDataSource = HomeContentLocalDataSourceImpl(
+                dao = HomeDatabaseAccessor.homeContentDao()
+            ),
+            dtoToDomainMapper = HomeContentDtoListMapper(HomeContentDtoMapper()),
+            entityToDomainMapper = HomeContentEntityListMapper(HomeContentEntityToDomainMapper()),
+            domainToEntityMapper = HomeContentDomainListToEntityMapper(HomeContentDomainToEntityMapper())
+        ),
         dispatcherProvider = dispatcherProvider
     ),
     private val loadHomeContentUseCase: LoadHomeContentUseCase =
