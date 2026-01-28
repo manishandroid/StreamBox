@@ -101,11 +101,13 @@ Each branch adds **exactly one concept** on top of `main`:
 | 4 | `feature/mapper-pattern` | Layer transformation with Mapper |
 | 5 | `feature/repository-pattern` | Data layer abstraction |
 | 6 | `feature/network-integration` | Ktor + real API |
-| 7 | `feature/persistence-datastore` | DataStore-backed persistence |
-| 8 | `feature/navigation-flow` | Multi-screen navigation |
-| 9 | `feature/analytics-events` | Event tracking infrastructure |
-| 10 | `feature/unit-testing` | Reducer, UseCase, ViewModel tests |
-| 11 | `feature/snapshot-testing` | Paparazzi UI tests |
+| 7 | `feature/offline-room-db` | Room persistence infra setup |
+| 8 | `feature/offline-mediator` | Decision Mediator Remote vs Local |
+| 9 | `feature/di-wiring` | Dependency Injection Component Wiring |
+| 10 | `feature/ui-improvement` | UI Polishing |
+| 11 | `feature/navigation-flow` | Multi-screen navigation |
+| 12 | `feature/unit-testing` | Reducer, UseCase, ViewModel tests |
+| 13 | `feature/snapshot-testing` | Paparazzi UI tests |
 
 ### Branch Rules
 
@@ -274,12 +276,6 @@ This is a learning project for educational purposes.
 2. Make focused, single-purpose changes
 3. Ensure tests pass
 4. Update documentation
-
-## Visitor Count
-<div align="center">
-        <img alt="Visitor Stats" 
-            src="https://widgetbite.com/stats/manishandroid"/>  
-    </div>
 
 ---
 
