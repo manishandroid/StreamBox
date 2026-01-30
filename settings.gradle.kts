@@ -19,7 +19,6 @@ rootProject.name = "StreamBox"
 include(":app")
 include(":core:architecture")
 include(":core:designsystem")
-include(":core:database")
 include(":core:network")
 include(":core:ui")
 include(":core:testing")

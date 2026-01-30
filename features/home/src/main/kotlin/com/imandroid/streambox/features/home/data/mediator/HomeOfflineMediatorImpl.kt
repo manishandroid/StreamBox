@@ -7,8 +7,9 @@ import com.imandroid.streambox.features.home.data.remote.HomeContentRemoteDataSo
 import com.imandroid.streambox.features.home.data.local.db.HomeContentEntity
 import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.HomeContentLoadException
+import javax.inject.Inject
 
-class HomeOfflineMediatorImpl(
+class HomeOfflineMediatorImpl @Inject constructor(
     private val remoteDataSource: HomeContentRemoteDataSource,
     private val localDataSource: HomeContentLocalDataSource,
     private val dtoToDomainMapper: Mapper<List<HomeContentDto>, List<HomeContent>>,

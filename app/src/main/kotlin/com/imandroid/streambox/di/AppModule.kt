@@ -16,11 +16,8 @@ import kotlin.coroutines.CoroutineContext
  * Core infrastructure dependencies are provided at the SingletonComponent
  * level to ensure single instances throughout the app lifecycle.
  *
- * ## Current State (main branch)
- * Only provides DispatcherProvider. Additional providers will be added
- * in feature branches:
- * - NetworkModule in `feature/network-integration`
- * - PersistenceModule in `feature/persistence-datastore`
+ * ## Current State
+ * Provides shared infrastructure dependencies.
  */
 @Module
 @InstallIn(SingletonComponent::class)

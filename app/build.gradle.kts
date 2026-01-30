@@ -56,7 +56,6 @@ android {
 dependencies {
     // Project modules
     implementation(project(":core:architecture"))
-    implementation(project(":core:database"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:ui"))
     implementation(project(":features:home"))
@@ -79,6 +78,8 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     // Room (App-owned database)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
     // Debug
@@ -91,4 +92,5 @@ dependencies {
     androidTestImplementation(libs.room.testing)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
+
 }

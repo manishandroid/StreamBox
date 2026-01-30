@@ -5,8 +5,9 @@ import com.imandroid.streambox.features.home.data.mediator.HomeOfflineMediator
 import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.repository.HomeContentRepository
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class HomeContentRepositoryImpl(
+class HomeContentRepositoryImpl @Inject constructor(
     private val mediator: HomeOfflineMediator,
     private val dispatcherProvider: DispatcherProvider
 ) : HomeContentRepository {

@@ -1,28 +1,30 @@
-# StreamBox - Offline Mediator
+# StreamBox - DI Wiring (Hilt)
 
-This branch introduces the mediator that coordinates remote and local data
-sources. The goal is to keep repositories thin while adding network-first,
-DB-fallback behavior for offline browsing.
+This branch introduces Hilt-based dependency injection across the app. The goal
+is to remove manual wiring and global access patterns while keeping all
+business logic unchanged.
 
-## Why Mediator Logic Is Separate
-Persistence infrastructure and coordination logic are different concerns. This
-branch focuses only on decision flow between sources without changing UI,
-reducers, or UseCase contracts.
+## Why DI Now
+As layers grow, manual construction becomes hard to maintain. DI provides a
+single, declarative place to wire dependencies without coupling layers or
+introducing service locators.
 
 ## What Changed
-- Feature-specific offline mediator in the data layer
-- RemoteDataSource and LocalDataSource orchestration
-- Repository delegates to mediator
-- Strict mapping boundaries preserved
+- Hilt modules added per layer and feature
+- Constructor injection for ViewModels, UseCases, Repositories, Mediators, and DataSources
+- Shared infrastructure provided as Singletons
+- No changes to business logic, reducers, or UI behavior
 
-## Files to Read First
-- `features/home/data/mediator/HomeOfflineMediator.kt`
-- `features/home/data/mediator/HomeOfflineMediatorImpl.kt`
-- `features/home/data/remote/HomeContentRemoteDataSource.kt`
-- `features/home/data/local/HomeContentLocalDataSource.kt`
-- `features/home/data/HomeContentRepositoryImpl.kt`
+## DI Structure to Start With
+- `core/network/di/NetworkModule.kt`
+- `data/database/src/main/kotlin/com/imandroid/streambox/data/database/di/DatabaseModule.kt`
+- `features/home/data/di/HomeDataModule.kt`
+- `features/home/data/di/HomeDataMapperModule.kt`
+- `features/home/domain/di/HomeDomainModule.kt`
+- `features/home/ui/di/HomePresentationModule.kt`
 
-## Flow Summary
-UI event -> ViewModel -> UseCase -> Repository -> OfflineMediator
--> RemoteDataSource / LocalDataSource -> Domain models -> UI mapper
--> Reducer action -> StateFlow -> UI
+## Notes
+- Repositories remain thin and declarative
+- Mediator owns coordination logic
+- UseCases remain unchanged
+- UI continues to observe state only

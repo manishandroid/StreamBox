@@ -3,8 +3,9 @@ package com.imandroid.streambox.features.home.data.local
 import com.imandroid.streambox.features.home.data.local.db.HomeContentDao
 import com.imandroid.streambox.features.home.data.local.db.HomeContentEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class HomeContentLocalDataSourceImpl(
+class HomeContentLocalDataSourceImpl @Inject constructor(
     private val dao: HomeContentDao
 ) : HomeContentLocalDataSource {
     override fun observeAll(): Flow<List<HomeContentEntity>> = dao.observeAll()
