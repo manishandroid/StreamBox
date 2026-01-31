@@ -28,3 +28,25 @@ introducing service locators.
 - Mediator owns coordination logic
 - UseCases remain unchanged
 - UI continues to observe state only
+
+## High-Level Dependency Graph
+This diagram shows the conceptual dependency flow across layers.
+
+```mermaid
+flowchart TD
+    Application --> ViewModel
+    ViewModel --> UseCase
+    UseCase --> Repository
+    Repository --> Mediator
+    Mediator --> RemoteDataSource
+    Mediator --> LocalDataSource
+    UseCase --> Mapper
+    Repository --> Mapper
+    ViewModel --> Mapper
+    ViewModel --> Reducer
+    Reducer --> UI
+```
+
+If your Markdown renderer does not support Mermaid, use the diagram below:
+
+![High-Level Dependency Graph](/assets/di-graph.svg)
