@@ -25,5 +25,5 @@ while still enabling caching and consistent rendering.
 - The approach mirrors a reference project that centralizes image loading and UI rendering
 
 ## Demo Recording
-- `assets/image-loading-home-complete.mp4`
+<video src="assets/image-loading-home-complete.mp4" controls playsinline></video>
 
