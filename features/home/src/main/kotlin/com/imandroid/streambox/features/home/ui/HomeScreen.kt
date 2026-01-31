@@ -4,10 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,11 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import com.imandroid.streambox.core.designsystem.theme.AppTheme
 import com.imandroid.streambox.core.designsystem.theme.StreamBoxTheme
 import com.imandroid.streambox.core.ui.components.LoadingIndicator
+import com.imandroid.streambox.core.ui.components.TwoByThreeTile
 import com.imandroid.streambox.features.home.ui.model.HomeContentUi
 
 @Composable
@@ -95,32 +100,33 @@ private fun HomeIdle(
 private fun HomeContent(
     items: List<HomeContentUi>
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = AppTheme.spacers.lg, vertical = AppTheme.spacers.xl),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(
+            horizontal = AppTheme.spacers.md,
+            vertical = AppTheme.spacers.lg
+        ),
+        horizontalArrangement = Arrangement.spacedBy(AppTheme.spacers.md),
+        verticalArrangement = Arrangement.spacedBy(AppTheme.spacers.md)
     ) {
-        item {
-            Text(
-                text = "Featured picks",
-                style = AppTheme.typography.displayMedium,
-                color = AppTheme.colors.text.primary,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(AppTheme.spacers.lg))
+        item(span = { GridItemSpan(2) }) {
+            Column {
+                Text(
+                    text = "Popular on StreamBox",
+                    style = AppTheme.typography.titleLarge,
+                    color = AppTheme.colors.text.primary
+                )
+                Spacer(modifier = Modifier.height(AppTheme.spacers.md))
+            }
         }
 
         items(items) { item ->
-            Text(
-                text = "${item.title} • ${item.year} • ${item.category}",
-                style = AppTheme.typography.bodyLarge,
-                color = AppTheme.colors.text.secondary,
-                textAlign = TextAlign.Center
+            TwoByThreeTile(
+                title = item.title,
+                imageUrl = item.imageUrl,
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(AppTheme.spacers.sm))
         }
     }
 }
@@ -165,8 +171,8 @@ private fun HomeScreenPreview() {
         HomeScreen(
             state = HomeState.Content(
                 listOf(
-                    HomeContentUi("Night Signal", "2024", "Sci-Fi"),
-                    HomeContentUi("Harborline", "2023", "Drama")
+                    HomeContentUi("Night Signal", "2024", "Sci-Fi", imageUrl = null),
+                    HomeContentUi("Harborline", "2023", "Drama", imageUrl = null)
                 )
             ),
             onAction = {}

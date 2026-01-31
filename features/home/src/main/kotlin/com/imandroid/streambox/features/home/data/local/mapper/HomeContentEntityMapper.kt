@@ -9,7 +9,8 @@ class HomeContentEntityToDomainMapper @Inject constructor() : Mapper<HomeContent
     override fun map(input: HomeContentEntity): HomeContent = HomeContent(
         title = input.title,
         year = input.year,
-        category = input.category
+        category = input.category,
+        imageUrl = input.imageUrl
     )
 }
 
@@ -19,7 +20,7 @@ class HomeContentDomainToEntityMapper @Inject constructor() : Mapper<HomeContent
         title = input.title,
         year = input.year,
         category = input.category,
-        imageUrl = null
+        imageUrl = input.imageUrl
     )
 }
 

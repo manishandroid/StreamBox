@@ -10,11 +10,16 @@ class HomeContentUiMapperTest {
     @Test
     fun `maps domain content to ui content`() {
         val mapper = HomeContentUiMapper()
-        val domain = HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi")
+        val domain = HomeContent(
+            title = "Night Signal",
+            year = "2024",
+            category = "Sci-Fi",
+            imageUrl = "https://example.org/poster.jpg"
+        )
 
         val ui = mapper.map(domain)
 
-        assertEquals(HomeContentUi("Night Signal", "2024", "Sci-Fi"), ui)
+        assertEquals(HomeContentUi("Night Signal", "2024", "Sci-Fi", "https://example.org/poster.jpg"), ui)
     }
 
     @Test

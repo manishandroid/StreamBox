@@ -1,48 +1,25 @@
-# StreamBox - DI Wiring (Hilt)
+# StreamBox - Image Loading
 
-This branch introduces Hilt-based dependency injection across the app. The goal
-is to remove manual wiring and global access patterns while keeping all
-business logic unchanged.
+This branch adds image loading end-to-end for the Home grid. The goal is to
+ensure image URLs flow through all layers and render in UI using shared
+infrastructure, without touching business logic.
 
-## Why DI Now
-As layers grow, manual construction becomes hard to maintain. DI provides a
-single, declarative place to wire dependencies without coupling layers or
-introducing service locators.
+## Why Image Loading Is UI Infrastructure
+Images are a presentation concern. Keeping loading logic in UI and design
+system layers prevents networking or domain code from depending on UI details
+while still enabling caching and consistent rendering.
 
 ## What Changed
-- Hilt modules added per layer and feature
-- Constructor injection for ViewModels, UseCases, Repositories, Mediators, and DataSources
-- Shared infrastructure provided as Singletons
-- No changes to business logic, reducers, or UI behavior
+- Image URLs now flow from API DTOs to Domain and UI models
+- Shared image composable added in `core/ui` for consistent loading and fallback
+- App-level image loader configured with caching defaults
 
-## DI Structure to Start With
-- `core/network/di/NetworkModule.kt`
-- `data/database/src/main/kotlin/com/imandroid/streambox/data/database/di/DatabaseModule.kt`
-- `features/home/data/di/HomeDataModule.kt`
-- `features/home/data/di/HomeDataMapperModule.kt`
-- `features/home/domain/di/HomeDomainModule.kt`
-- `features/home/ui/di/HomePresentationModule.kt`
+## Composables to Start With
+- `core/ui/components/StreamBoxImage.kt`
+- `features/home/ui/HomeScreen.kt` (tile usage)
 
 ## Notes
-- Repositories remain thin and declarative
-- Mediator owns coordination logic
-- UseCases remain unchanged
-- UI continues to observe state only
-
-## High-Level Dependency Graph
-This diagram shows the conceptual dependency flow across layers.
-
-```mermaid
-flowchart TD
-    Application --> ViewModel
-    ViewModel --> UseCase
-    UseCase --> Repository
-    Repository --> Mediator
-    Mediator --> RemoteDataSource
-    Mediator --> LocalDataSource
-    UseCase --> Mapper
-    Repository --> Mapper
-    ViewModel --> Mapper
-    ViewModel --> Reducer
-    Reducer --> UI
-```
+- Reducers, use cases, and repositories remain unchanged
+- Mappers pass URLs only; UI decides how to render images
+- Layout remains the same; tiles now show real images
+- The approach mirrors a reference project that centralizes image loading and UI rendering

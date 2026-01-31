@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.imandroid.streambox"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.imandroid.streambox"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
 
@@ -81,6 +81,12 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    // Images
+    implementation(libs.coil)
+    implementation(libs.coil.svg)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.network.ktor2)
 
     // Debug
     debugImplementation(libs.compose.ui.tooling)

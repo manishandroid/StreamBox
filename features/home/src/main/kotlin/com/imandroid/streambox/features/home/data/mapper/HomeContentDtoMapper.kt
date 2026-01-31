@@ -12,10 +12,12 @@ class HomeContentDtoMapper @Inject constructor() : Mapper<HomeContentDto, HomeCo
     override fun map(input: HomeContentDto): HomeContent {
         val year = input.premiered?.takeIf { it.length >= 4 }?.substring(0, 4) ?: UNKNOWN_YEAR
         val category = input.genres.firstOrNull() ?: DEFAULT_CATEGORY
+        val imageUrl = input.image?.medium ?: input.image?.original
         return HomeContent(
             title = input.name,
             year = year,
-            category = category
+            category = category,
+            imageUrl = imageUrl
         )
     }
 }

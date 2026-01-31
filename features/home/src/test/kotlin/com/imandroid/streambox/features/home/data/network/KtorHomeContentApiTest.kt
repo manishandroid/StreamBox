@@ -20,7 +20,7 @@ class KtorHomeContentApiTest {
     fun `parses home content response`() = runTest {
         val jsonBody = """
             [
-              { "name": "Night Signal", "premiered": "2024-01-01", "genres": ["Sci-Fi"] },
+              { "name": "Night Signal", "premiered": "2024-01-01", "genres": ["Sci-Fi"], "image": { "medium": "https://example.org/medium.jpg" } },
               { "name": "Harborline", "premiered": null, "genres": [] }
             ]
         """.trimIndent()

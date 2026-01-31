@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.imandroid.streambox.core.ui"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -39,6 +39,10 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui.tooling.preview)
+
+    // Images
+    implementation(libs.coil.compose)
+    implementation(libs.lottie.compose)
 
     // Debug
     debugImplementation(libs.compose.ui.tooling)

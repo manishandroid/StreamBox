@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.imandroid.streambox.core.network"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24

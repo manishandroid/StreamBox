@@ -10,5 +10,15 @@ data class HomeContentDto(
     @SerialName("premiered")
     val premiered: String? = null,
     @SerialName("genres")
-    val genres: List<String> = emptyList()
+    val genres: List<String> = emptyList(),
+    @SerialName("image")
+    val image: HomeContentImageDto? = null
+)
+
+@Serializable
+data class HomeContentImageDto(
+    @SerialName("medium")
+    val medium: String? = null,
+    @SerialName("original")
+    val original: String? = null
 )

@@ -9,7 +9,8 @@ class HomeContentUiMapper @Inject constructor() : Mapper<HomeContent, HomeConten
     override fun map(input: HomeContent): HomeContentUi = HomeContentUi(
         title = input.title,
         year = input.year,
-        category = input.category
+        category = input.category,
+        imageUrl = input.imageUrl
     )
 }
 

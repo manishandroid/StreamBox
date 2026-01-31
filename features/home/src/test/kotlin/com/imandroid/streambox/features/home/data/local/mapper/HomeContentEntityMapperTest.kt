@@ -10,7 +10,12 @@ class HomeContentEntityMapperTest {
     @Test
     fun `maps domain to entity`() {
         val mapper = HomeContentDomainToEntityMapper()
-        val domain = HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi")
+        val domain = HomeContent(
+            title = "Night Signal",
+            year = "2024",
+            category = "Sci-Fi",
+            imageUrl = "https://example.org/poster.jpg"
+        )
 
         val entity = mapper.map(domain)
 
@@ -18,6 +23,7 @@ class HomeContentEntityMapperTest {
         assertEquals("2024", entity.year)
         assertEquals("Sci-Fi", entity.category)
         assertEquals("Night Signal", entity.id)
+        assertEquals("https://example.org/poster.jpg", entity.imageUrl)
     }
 
     @Test
@@ -33,6 +39,6 @@ class HomeContentEntityMapperTest {
 
         val domain = mapper.map(entity)
 
-        assertEquals(HomeContent("Harborline", "2023", "Drama"), domain)
+        assertEquals(HomeContent("Harborline", "2023", "Drama", null), domain)
     }
 }
