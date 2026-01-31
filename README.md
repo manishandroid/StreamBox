@@ -23,3 +23,7 @@ while still enabling caching and consistent rendering.
 - Mappers pass URLs only; UI decides how to render images
 - Layout remains the same; tiles now show real images
 - The approach mirrors a reference project that centralizes image loading and UI rendering
+
+## Demo Recording
+- `assets/image-loading-home-complete.mp4`
+
