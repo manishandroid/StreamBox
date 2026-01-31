@@ -46,7 +46,3 @@ flowchart TD
     ViewModel --> Reducer
     Reducer --> UI
 ```
-
-If your Markdown renderer does not support Mermaid, use the diagram below:
-
-![High-Level Dependency Graph](/assets/di-graph.svg)
