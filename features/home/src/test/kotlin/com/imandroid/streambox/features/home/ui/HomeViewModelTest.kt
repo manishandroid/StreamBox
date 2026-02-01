@@ -1,75 +1,171 @@
 package com.imandroid.streambox.features.home.ui
 
+import app.cash.turbine.test
+import com.imandroid.streambox.core.architecture.Mapper
 import com.imandroid.streambox.core.testing.TestDispatcherProvider
 import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.usecase.LoadHomeContentUseCase
 import com.imandroid.streambox.features.home.ui.model.HomeContentUi
-import kotlinx.coroutines.Dispatchers
+import io.mockk.Called
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private val testDispatcher = StandardTestDispatcher()
-
-    @Before
-    fun setup() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
-    fun `load action delegates to use case and updates state`() = runTest {
-        val useCase = FakeLoadHomeContentUseCase()
-        val mapper = FakeHomeContentUiMapper()
+    fun `given Load action when invoked then emits Content state`() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val useCase = mockk<LoadHomeContentUseCase>()
+        val mapper = mockk<Mapper<List<HomeContent>, List<HomeContentUi>>>()
+        val domainItems = listOf(HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi"))
+        val uiItems = listOf(HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi"))
+
+        coEvery { useCase.invoke() } returns Result.success(domainItems)
+        every { mapper.map(domainItems) } returns uiItems
+
         val viewModel = HomeViewModel(
             dispatcherProvider = TestDispatcherProvider(testDispatcher),
             loadHomeContentUseCase = useCase,
             homeContentUiMapper = mapper
         )
 
-        viewModel.onAction(HomeAction.Load)
-        advanceUntilIdle()
+        viewModel.state.test {
+            assertEquals(HomeState.Idle, awaitItem())
 
-        assertEquals(1, useCase.invocations)
-        assertEquals(1, mapper.invocations)
-        assertEquals(HomeState.Content(mapper.uiItems), viewModel.state.value)
+            viewModel.onAction(HomeAction.Load)
+
+            assertEquals(HomeState.Loading, awaitItem())
+            assertEquals(HomeState.Content(uiItems), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(exactly = 1) { useCase.invoke() }
+        verify(exactly = 1) { mapper.map(domainItems) }
+        confirmVerified(useCase, mapper)
     }
-}
 
-private class FakeLoadHomeContentUseCase : LoadHomeContentUseCase {
-    val items = listOf(
-        HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi")
-    )
-    var invocations: Int = 0
+    @Test
+    fun `given Load action when use case fails then emits Error state`() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val useCase = mockk<LoadHomeContentUseCase>()
+        val mapper = mockk<Mapper<List<HomeContent>, List<HomeContentUi>>>()
 
-    override suspend fun invoke(): Result<List<HomeContent>> {
-        invocations += 1
-        return Result.success(items)
+        coEvery { useCase.invoke() } returns Result.failure(IllegalStateException("Offline"))
+
+        val viewModel = HomeViewModel(
+            dispatcherProvider = TestDispatcherProvider(testDispatcher),
+            loadHomeContentUseCase = useCase,
+            homeContentUiMapper = mapper
+        )
+
+        viewModel.state.test {
+            assertEquals(HomeState.Idle, awaitItem())
+
+            viewModel.onAction(HomeAction.Load)
+
+            assertEquals(HomeState.Loading, awaitItem())
+            val errorState = awaitItem() as HomeState.Error
+            assertEquals("Offline", errorState.message)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(exactly = 1) { useCase.invoke() }
+        verify { mapper wasNot Called }
+        confirmVerified(useCase, mapper)
     }
-}
 
-private class FakeHomeContentUiMapper : com.imandroid.streambox.core.architecture.Mapper<List<HomeContent>, List<HomeContentUi>> {
-    val uiItems = listOf(
-        HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi")
-    )
-    var invocations: Int = 0
+    @Test
+    fun `given ContentLoaded action when invoked then emits Content state directly`() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val useCase = mockk<LoadHomeContentUseCase>(relaxed = true)
+        val mapper = mockk<Mapper<List<HomeContent>, List<HomeContentUi>>>()
+        val uiItems = listOf(HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi"))
 
-    override fun map(input: List<HomeContent>): List<HomeContentUi> {
-        invocations += 1
-        return uiItems
+        val viewModel = HomeViewModel(
+            dispatcherProvider = TestDispatcherProvider(testDispatcher),
+            loadHomeContentUseCase = useCase,
+            homeContentUiMapper = mapper
+        )
+
+        viewModel.state.test {
+            assertEquals(HomeState.Idle, awaitItem())
+
+            viewModel.onAction(HomeAction.ContentLoaded(uiItems))
+
+            assertEquals(HomeState.Content(uiItems), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(exactly = 0) { useCase.invoke() }
+        verify { mapper wasNot Called }
+        confirmVerified(useCase, mapper)
+    }
+
+    @Test
+    fun `given Retry action when invoked then emits Content state`() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val useCase = mockk<LoadHomeContentUseCase>()
+        val mapper = mockk<Mapper<List<HomeContent>, List<HomeContentUi>>>()
+        val domainItems = listOf(HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi"))
+        val uiItems = listOf(HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi"))
+
+        coEvery { useCase.invoke() } returns Result.success(domainItems)
+        every { mapper.map(domainItems) } returns uiItems
+
+        val viewModel = HomeViewModel(
+            dispatcherProvider = TestDispatcherProvider(testDispatcher),
+            loadHomeContentUseCase = useCase,
+            homeContentUiMapper = mapper
+        )
+
+        viewModel.state.test {
+            assertEquals(HomeState.Idle, awaitItem())
+
+            viewModel.onAction(HomeAction.Retry)
+
+            assertEquals(HomeState.Loading, awaitItem())
+            assertEquals(HomeState.Content(uiItems), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(exactly = 1) { useCase.invoke() }
+        verify(exactly = 1) { mapper.map(domainItems) }
+        confirmVerified(useCase, mapper)
+    }
+
+    @Test
+    fun `given LoadingFailed action when invoked then emits Error state directly`() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val useCase = mockk<LoadHomeContentUseCase>(relaxed = true)
+        val mapper = mockk<Mapper<List<HomeContent>, List<HomeContentUi>>>(relaxed = true)
+
+        val viewModel = HomeViewModel(
+            dispatcherProvider = TestDispatcherProvider(testDispatcher),
+            loadHomeContentUseCase = useCase,
+            homeContentUiMapper = mapper
+        )
+
+        viewModel.state.test {
+            assertEquals(HomeState.Idle, awaitItem())
+
+            viewModel.onAction(HomeAction.LoadingFailed("Offline"))
+
+            assertEquals(HomeState.Error("Offline"), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        verify { useCase wasNot Called }
+        verify { mapper wasNot Called }
+        confirmVerified(useCase, mapper)
     }
 }

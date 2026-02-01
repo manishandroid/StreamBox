@@ -1,16 +1,12 @@
 package com.imandroid.streambox.features.home.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +17,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
@@ -55,8 +50,10 @@ import com.imandroid.streambox.core.ui.components.LoadingIndicator
 import com.imandroid.streambox.core.ui.components.TwoByThreeTile
 import com.imandroid.streambox.features.home.R
 import com.imandroid.streambox.features.home.ui.model.HomeContentUi
+import com.imandroid.streambox.core.architecture.IgnoreKover
 
 @Composable
+@IgnoreKover
 fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel()
@@ -70,6 +67,7 @@ fun HomeRoute(
 }
 
 @Composable
+@IgnoreKover
 fun HomeScreen(
     state: HomeState,
     onAction: (HomeAction) -> Unit,
@@ -91,6 +89,7 @@ fun HomeScreen(
 }
 
 @Composable
+@IgnoreKover
 private fun HomeIdle(
     onAction: (HomeAction) -> Unit
 ) {
@@ -166,6 +165,7 @@ private fun HomeIdle(
 }
 
 @Composable
+@IgnoreKover
 private fun SectionTitle(
     title: String
 ) {
@@ -178,6 +178,7 @@ private fun SectionTitle(
 }
 
 @Composable
+@IgnoreKover
 private fun SectionBody(
     text: String
 ) {
@@ -189,6 +190,7 @@ private fun SectionBody(
 }
 
 @Composable
+@IgnoreKover
 private fun LinkText(
     label: String,
     url: String,
@@ -211,6 +213,7 @@ private fun LinkText(
 }
 
 @Composable
+@IgnoreKover
 private fun HomeContentScreen(
     items: List<HomeContentUi>
 ) {
@@ -246,6 +249,7 @@ private fun HomeContentScreen(
 }
 
 @Composable
+@IgnoreKover
 private fun HomeTopBar() {
     Column(
         modifier = Modifier
@@ -266,6 +270,7 @@ private fun HomeTopBar() {
 }
 
 @Composable
+@IgnoreKover
 private fun GenreTabRow(
     genres: List<String>,
     selectedIndex: Int,
@@ -300,6 +305,7 @@ private fun GenreTabRow(
 }
 
 @Composable
+@IgnoreKover
 private fun HomeGrid(
     items: List<HomeContentUi>,
     modifier: Modifier = Modifier
@@ -324,6 +330,7 @@ private fun HomeGrid(
     }
 }
 
+@IgnoreKover
 private enum class BottomNavItem(val label: String, val iconRes: Int) {
     Home("Home", R.drawable.ic_nav_home),
     Favorites("My Fav", R.drawable.ic_nav_fav),
@@ -332,6 +339,7 @@ private enum class BottomNavItem(val label: String, val iconRes: Int) {
 }
 
 @Composable
+@IgnoreKover
 private fun HomeBottomBar(
     selected: BottomNavItem,
     onSelected: (BottomNavItem) -> Unit
@@ -366,6 +374,7 @@ private fun HomeBottomBar(
 }
 
 @Composable
+@IgnoreKover
 private fun HomeError(
     message: String,
     onAction: (HomeAction) -> Unit
@@ -400,6 +409,7 @@ private fun HomeError(
 
 @Preview(showBackground = true)
 @Composable
+@IgnoreKover
 private fun HomeScreenPreview() {
     StreamBoxTheme {
         HomeScreen(

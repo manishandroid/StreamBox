@@ -7,6 +7,10 @@ import com.imandroid.streambox.features.home.data.network.dto.HomeContentDto
 import com.imandroid.streambox.features.home.data.remote.HomeContentRemoteDataSource
 import com.imandroid.streambox.features.home.domain.HomeContent
 import com.imandroid.streambox.features.home.domain.HomeContentLoadException
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -17,36 +21,57 @@ import org.junit.Test
 class HomeOfflineMediatorImplTest {
 
     @Test
-    fun `network success writes to db and returns domain`() = runTest {
-        val remote = FakeRemote(Result.success(listOf(HomeContentDto(name = "Night Signal"))))
-        val local = FakeLocal()
+    fun `given network success when load then writes db and returns domain`() = runTest {
+        val remote = mockk<HomeContentRemoteDataSource>()
+        val local = mockk<HomeContentLocalDataSource>(relaxed = true)
+        val dtoToDomain = mockk<Mapper<List<HomeContentDto>, List<HomeContent>>>()
+        val entityToDomain = mockk<Mapper<List<HomeContentEntity>, List<HomeContent>>>()
+        val domainToEntity = mockk<Mapper<List<HomeContent>, List<HomeContentEntity>>>()
+        val dtoList = listOf(HomeContentDto(name = "Night Signal"))
+        val domainList = listOf(HomeContent(title = "Night Signal", year = "2024", category = "Drama"))
+        val entityList = listOf(HomeContentEntity(id = "1", title = "Night Signal", year = "2024", category = "Drama", imageUrl = null))
+
+        coEvery { remote.fetchHomeContent() } returns Result.success(dtoList)
+        every { dtoToDomain.map(dtoList) } returns domainList
+        every { domainToEntity.map(domainList) } returns entityList
+
         val mediator = HomeOfflineMediatorImpl(
             remoteDataSource = remote,
             localDataSource = local,
-            dtoToDomainMapper = IdentityDtoToDomainMapper(),
-            entityToDomainMapper = IdentityEntityToDomainMapper(),
-            domainToEntityMapper = IdentityDomainToEntityMapper()
+            dtoToDomainMapper = dtoToDomain,
+            entityToDomainMapper = entityToDomain,
+            domainToEntityMapper = domainToEntity
         )
 
         val result = mediator.loadHomeContent()
 
+        coVerify(exactly = 1) { local.upsertAll(entityList) }
         assertTrue(result.isSuccess)
-        assertEquals(1, local.upsertCalls)
         assertEquals(1, result.getOrThrow().size)
     }
 
     @Test
-    fun `network failure falls back to db when available`() = runTest {
-        val remote = FakeRemote(Result.failure(IllegalStateException("Network failed")))
-        val local = FakeLocal(
-            stored = listOf(HomeContentEntity(id = "1", title = "Cached", year = "2024", category = "Drama", imageUrl = null))
+    fun `given network failure and cache when load then returns cached`() = runTest {
+        val remote = mockk<HomeContentRemoteDataSource>()
+        val local = mockk<HomeContentLocalDataSource>()
+        val dtoToDomain = mockk<Mapper<List<HomeContentDto>, List<HomeContent>>>()
+        val entityToDomain = mockk<Mapper<List<HomeContentEntity>, List<HomeContent>>>()
+        val domainToEntity = mockk<Mapper<List<HomeContent>, List<HomeContentEntity>>>()
+        val cachedEntities = listOf(
+            HomeContentEntity(id = "1", title = "Cached", year = "2024", category = "Drama", imageUrl = null)
         )
+        val cachedDomain = listOf(HomeContent(title = "Cached", year = "2024", category = "Drama"))
+
+        coEvery { remote.fetchHomeContent() } returns Result.failure(IllegalStateException("Network failed"))
+        coEvery { local.getAll() } returns cachedEntities
+        every { entityToDomain.map(cachedEntities) } returns cachedDomain
+
         val mediator = HomeOfflineMediatorImpl(
             remoteDataSource = remote,
             localDataSource = local,
-            dtoToDomainMapper = IdentityDtoToDomainMapper(),
-            entityToDomainMapper = IdentityEntityToDomainMapper(),
-            domainToEntityMapper = IdentityDomainToEntityMapper()
+            dtoToDomainMapper = dtoToDomain,
+            entityToDomainMapper = entityToDomain,
+            domainToEntityMapper = domainToEntity
         )
 
         val result = mediator.loadHomeContent()
@@ -56,15 +81,22 @@ class HomeOfflineMediatorImplTest {
     }
 
     @Test
-    fun `network failure returns error when db is empty`() = runTest {
-        val remote = FakeRemote(Result.failure(IllegalStateException("Network failed")))
-        val local = FakeLocal()
+    fun `given network failure and empty cache when load then returns error`() = runTest {
+        val remote = mockk<HomeContentRemoteDataSource>()
+        val local = mockk<HomeContentLocalDataSource>()
+        val dtoToDomain = mockk<Mapper<List<HomeContentDto>, List<HomeContent>>>()
+        val entityToDomain = mockk<Mapper<List<HomeContentEntity>, List<HomeContent>>>()
+        val domainToEntity = mockk<Mapper<List<HomeContent>, List<HomeContentEntity>>>()
+
+        coEvery { remote.fetchHomeContent() } returns Result.failure(IllegalStateException("Network failed"))
+        coEvery { local.getAll() } returns emptyList()
+
         val mediator = HomeOfflineMediatorImpl(
             remoteDataSource = remote,
             localDataSource = local,
-            dtoToDomainMapper = IdentityDtoToDomainMapper(),
-            entityToDomainMapper = IdentityEntityToDomainMapper(),
-            domainToEntityMapper = IdentityDomainToEntityMapper()
+            dtoToDomainMapper = dtoToDomain,
+            entityToDomainMapper = entityToDomain,
+            domainToEntityMapper = domainToEntity
         )
 
         val result = mediator.loadHomeContent()
@@ -72,41 +104,4 @@ class HomeOfflineMediatorImplTest {
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is HomeContentLoadException)
     }
-}
-
-private class FakeRemote(
-    private val result: Result<List<HomeContentDto>>
-) : HomeContentRemoteDataSource {
-    override suspend fun fetchHomeContent(): Result<List<HomeContentDto>> = result
-}
-
-private class FakeLocal(
-    private val stored: List<HomeContentEntity> = emptyList()
-) : HomeContentLocalDataSource {
-    var upsertCalls: Int = 0
-
-    override fun observeAll() = throw UnsupportedOperationException()
-
-    override suspend fun getAll(): List<HomeContentEntity> = stored
-
-    override suspend fun upsertAll(items: List<HomeContentEntity>) {
-        upsertCalls += 1
-    }
-
-    override suspend fun clearAll() = Unit
-}
-
-private class IdentityDtoToDomainMapper : Mapper<List<HomeContentDto>, List<HomeContent>> {
-    override fun map(input: List<HomeContentDto>): List<HomeContent> =
-        input.map { HomeContent(title = it.name, year = "2024", category = "Drama") }
-}
-
-private class IdentityEntityToDomainMapper : Mapper<List<HomeContentEntity>, List<HomeContent>> {
-    override fun map(input: List<HomeContentEntity>): List<HomeContent> =
-        input.map { HomeContent(title = it.title, year = it.year, category = it.category) }
-}
-
-private class IdentityDomainToEntityMapper : Mapper<List<HomeContent>, List<HomeContentEntity>> {
-    override fun map(input: List<HomeContent>): List<HomeContentEntity> =
-        input.map { HomeContentEntity(id = it.title, title = it.title, year = it.year, category = it.category, imageUrl = null) }
 }

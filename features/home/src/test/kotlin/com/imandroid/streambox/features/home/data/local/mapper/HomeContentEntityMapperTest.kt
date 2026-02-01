@@ -41,4 +41,36 @@ class HomeContentEntityMapperTest {
 
         assertEquals(HomeContent("Harborline", "2023", "Drama", null), domain)
     }
+
+    @Test
+    fun `maps entity list to domain list`() {
+        val itemMapper = HomeContentEntityToDomainMapper()
+        val listMapper = HomeContentEntityListMapper(itemMapper)
+        val entities = listOf(
+            HomeContentEntity(id = "1", title = "Night Signal", year = "2024", category = "Sci-Fi", imageUrl = null),
+            HomeContentEntity(id = "2", title = "Harborline", year = "2023", category = "Drama", imageUrl = null)
+        )
+
+        val result = listMapper.map(entities)
+
+        assertEquals(2, result.size)
+        assertEquals("Night Signal", result.first().title)
+        assertEquals("Harborline", result.last().title)
+    }
+
+    @Test
+    fun `maps domain list to entity list`() {
+        val itemMapper = HomeContentDomainToEntityMapper()
+        val listMapper = HomeContentDomainListToEntityMapper(itemMapper)
+        val domain = listOf(
+            HomeContent(title = "Night Signal", year = "2024", category = "Sci-Fi"),
+            HomeContent(title = "Harborline", year = "2023", category = "Drama")
+        )
+
+        val result = listMapper.map(domain)
+
+        assertEquals(2, result.size)
+        assertEquals("Night Signal", result.first().title)
+        assertEquals("Harborline", result.last().title)
+    }
 }

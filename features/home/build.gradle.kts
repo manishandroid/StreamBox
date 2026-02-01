@@ -73,4 +73,6 @@ dependencies {
     testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
 }

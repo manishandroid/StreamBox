@@ -2,7 +2,7 @@ package com.imandroid.streambox.features.home.ui
 
 import com.imandroid.streambox.core.testing.TestDispatcherProvider
 import com.imandroid.streambox.features.home.ui.model.HomeContentUi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -17,42 +17,34 @@ class HomeReducerTest {
     }
 
     @Test
-    fun `load action transitions to Loading state`() {
-        runBlocking {
-            reducer.update(HomeAction.Load)
+    fun `given Load when reducer updates then Loading state`() = runTest {
+        reducer.update(HomeAction.Load)
 
-            assertEquals(HomeState.Loading, reducer.state.value)
-        }
+        assertEquals(HomeState.Loading, reducer.state.value)
     }
 
     @Test
-    fun `content loaded action transitions to Content state`() {
-        runBlocking {
-            val items = listOf(
-                HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi")
-            )
+    fun `given ContentLoaded when reducer updates then Content state`() = runTest {
+        val items = listOf(
+            HomeContentUi(title = "Night Signal", year = "2024", category = "Sci-Fi")
+        )
 
-            reducer.update(HomeAction.ContentLoaded(items))
+        reducer.update(HomeAction.ContentLoaded(items))
 
-            assertEquals(HomeState.Content(items), reducer.state.value)
-        }
+        assertEquals(HomeState.Content(items), reducer.state.value)
     }
 
     @Test
-    fun `loading failed action transitions to Error state`() {
-        runBlocking {
-            reducer.update(HomeAction.LoadingFailed("Offline"))
+    fun `given LoadingFailed when reducer updates then Error state`() = runTest {
+        reducer.update(HomeAction.LoadingFailed("Offline"))
 
-            assertEquals(HomeState.Error("Offline"), reducer.state.value)
-        }
+        assertEquals(HomeState.Error("Offline"), reducer.state.value)
     }
 
     @Test
-    fun `retry action transitions to Loading state`() {
-        runBlocking {
-            reducer.update(HomeAction.Retry)
+    fun `given Retry when reducer updates then Loading state`() = runTest {
+        reducer.update(HomeAction.Retry)
 
-            assertEquals(HomeState.Loading, reducer.state.value)
-        }
+        assertEquals(HomeState.Loading, reducer.state.value)
     }
 }
