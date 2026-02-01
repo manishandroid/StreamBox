@@ -93,19 +93,19 @@ Placeholder feature (on `main`):
 
 Each branch adds **exactly one concept** on top of `main`:
 
-| Order | Branch | Focus |
-|-------|--------|-------|
-| 1 | `main` | Base app (this branch) |
-| 2 | `feature/reducer-basics` | State + Action + Reducer for home screen |
-| 3 | `feature/use-case-layer` | Domain layer with UseCase pattern |
-| 4 | `feature/mapper-pattern` | Layer transformation with Mapper |
-| 5 | `feature/repository-pattern` | Data layer abstraction |
-| 6 | `feature/network-integration` | Ktor + real API |
-| 7 | `feature/offline-room-db` | Room persistence infra setup |
-| 8 | `feature/offline-mediator` | Decision Mediator Remote vs Local |
-| 9 | `feature/di-wiring` | Dependency Injection Component Wiring |
-| 10 | `feature/ui-improvement` | UI Polishing |
-| 11 | `feature/navigation-flow` | Multi-screen navigation |
+| Order | Branch | Focus | Medium Blog |
+|-------|--------|-------|-------------|
+| 1 | `main` | Base app (this branch) | [The Most Boring Android App I’ve Ever Built (And Why It Matters)](https://mandroidubey.medium.com/the-most-boring-android-app-ive-ever-built-and-why-it-matters-8c0ec50ab601) |
+| 2 | `feature/reducer-basics` | State + Action + Reducer for home screen | [Stop Guessing UI State: A Real Architecture Win](https://mandroidubey.medium.com/stop-guessing-ui-state-a-real-architecture-win-dcf0c5d3d0f7) |
+| 3 | `feature/use-case-layer` | Domain layer with UseCase pattern | [Stop Letting ViewModels Decide: The Day I Added a Use Case Layer](https://mandroidubey.medium.com/stop-letting-viewmodels-decide-the-day-i-added-a-use-case-layer-5b49984fedea) |
+| 4 | `feature/mapper-pattern` | Layer transformation with Mapper | [Why I Put a Wall Between Domain and UI (And Called It a Mapper)](https://mandroidubey.medium.com/why-i-put-a-wall-between-domain-and-ui-and-called-it-a-mapper-20459a3a9904) |
+| 5 | `feature/repository-pattern` | Data layer abstraction | [Repositories: The Quiet Layer That Saves You Later](https://mandroidubey.medium.com/repositories-the-quiet-layer-that-saves-you-later-a5744a825f97) |
+| 6 | `feature/network-integration` | Ktor + real API | [The Day Real Data Arrived (And the Architecture Didn’t Flinch)](https://mandroidubey.medium.com/the-day-real-data-arrived-and-the-architecture-didnt-flinch-fedb8a872806) |
+| 7 | `feature/offline-room-db` | Room persistence infra setup | [Persistence Without the Shortcut: Why Room Comes First](https://mandroidubey.medium.com/persistence-without-the-shortcut-why-room-comes-first-bc3cb7cb0680) |
+| 8 | `feature/offline-mediator` | Decision Mediator Remote vs Local | [Offline Isn’t a Database — It’s a Decision](https://mandroidubey.medium.com/offline-isnt-a-database-it-s-a-decision-ac435f46bcef) |
+| 9 | `feature/di-wiring` | Dependency Injection Component Wiring | [Wiring the Architecture, Not Changing It : Dependency Injection](https://mandroidubey.medium.com/wiring-the-architecture-not-changing-it-dependency-injection-4748d0b79b0b) |
+| 10 | `feature/image-loading` | Image Loading | [Text to Tiles: The Day StreamBox Went Visual — Image Loading](https://mandroidubey.medium.com/text-to-tiles-the-day-streambox-went-visual-image-loading-50b4a9279e0f) |
+| 11 | `feature/ui-improvement` | UI Polishing |
 | 12 | `feature/unit-testing` | Reducer, UseCase, ViewModel tests |
 | 13 | `feature/snapshot-testing` | Paparazzi UI tests |
 
