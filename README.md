@@ -1,34 +1,25 @@
-# StreamBox - Unit Testing
+# StreamBox - Snapshot Testing
 
-This branch standardizes StreamBox’s unit testing approach so it mirrors
-production-grade patterns. The goal is to make tests deterministic, readable,
-and aligned across layers without touching runtime behavior.
+This branch adds snapshot testing for Compose UI to catch visual regressions.
+The goal is to validate UI output without running emulators or touching
+business logic.
 
-## What Was Limited Before
-- Tests mixed fakes and ad-hoc coroutine setups
-- Some tests relied on manual dispatcher overrides
-- Flow and coroutine testing patterns were inconsistent
+## Why Snapshot Testing Now
+Unit tests already cover logic. Snapshot tests add confidence at the visual
+layer once the architecture and UI structure are stable.
 
-## What Changed
-- Mocking is standardized with MockK
-- Coroutine tests use `runTest` and injected test dispatchers
-- Flow testing adopts Turbine for deterministic assertions
-- Tests use Given/When/Then naming and intent-driven structure
+## What Is Snapshot-Tested
+- Home screen (idle, loading, error, content)
+- Poster tile (2:3)
+- Top bar + tabs layout
+- Starting / intro screen
 
-## Layer Coverage
-- Reducers: pure state transitions
-- UseCases: orchestration and dependency interaction
-- Repositories/Mediators: success and failure behavior
-- Mappers: deterministic transformations
-- ViewModels: state flow emissions
+## What Snapshot Tests Do Not Do
+- No ViewModels, reducers, or use cases
+- No data fetching or coroutines
+- No Android framework dependencies
 
-## Why These Tools
-- **MockK** provides flexible mocking without boilerplate
-- **kotlinx-coroutines-test** makes async logic deterministic
-- **Turbine** simplifies Flow assertions and improves readability
-
-## Notes
-- No production behavior changes
-- No instrumentation or UI tests
-- Focus remains on unit-level confidence and clarity
+## How It Mirrors Production Strategy
+Snapshots are focused, declarative, and state-driven. They complement unit
+tests without replacing them and only change when the UI changes intentionally.
 

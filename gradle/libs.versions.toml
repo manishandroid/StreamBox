@@ -30,6 +30,9 @@ coil = "3.3.0"
 # Lottie
 lottie = "6.6.4"
 
+# Snapshot
+paparazzi = "2.0.0-alpha02"
+
 # Collections
 immutableCollections = "0.3.7"
 
@@ -116,3 +119,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
