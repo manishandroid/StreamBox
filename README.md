@@ -105,8 +105,8 @@ Each branch adds **exactly one concept** on top of `main`:
 | 8 | `feature/offline-mediator` | Decision Mediator Remote vs Local | [Offline Isn’t a Database — It’s a Decision](https://mandroidubey.medium.com/offline-isnt-a-database-it-s-a-decision-ac435f46bcef) |
 | 9 | `feature/di-wiring` | Dependency Injection Component Wiring | [Wiring the Architecture, Not Changing It : Dependency Injection](https://mandroidubey.medium.com/wiring-the-architecture-not-changing-it-dependency-injection-4748d0b79b0b) |
 | 10 | `feature/image-loading` | Image Loading | [Text to Tiles: The Day StreamBox Went Visual — Image Loading](https://mandroidubey.medium.com/text-to-tiles-the-day-streambox-went-visual-image-loading-50b4a9279e0f) |
-| 11 | `feature/ui-improvement` | UI Polishing |
-| 12 | `feature/unit-testing` | Reducer, UseCase, ViewModel tests |
+| 11 | `feature/ui-improvement` | UI Polishing | [StreamBox — UI Composition, Not Decoration](https://mandroidubey.medium.com/streambox-ui-composition-not-decoration-81f7fc2715dd) |
+| 12 | `feature/unit-testing` | Fake vs Mockk - Unit Testing | [Testing Isn’t a One‑Time Setup](https://mandroidubey.medium.com/testing-isnt-a-one-time-setup-a9b9ad9df20e) |
 | 13 | `feature/snapshot-testing` | Paparazzi UI tests |
 
 ### Branch Rules
