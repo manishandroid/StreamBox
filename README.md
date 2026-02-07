@@ -107,7 +107,7 @@ Each branch adds **exactly one concept** on top of `main`:
 | 10 | `feature/image-loading` | Image Loading | [Text to Tiles: The Day StreamBox Went Visual — Image Loading](https://mandroidubey.medium.com/text-to-tiles-the-day-streambox-went-visual-image-loading-50b4a9279e0f) |
 | 11 | `feature/ui-improvement` | UI Polishing | [StreamBox — UI Composition, Not Decoration](https://mandroidubey.medium.com/streambox-ui-composition-not-decoration-81f7fc2715dd) |
 | 12 | `feature/unit-testing` | Fake vs Mockk - Unit Testing | [Testing Isn’t a One‑Time Setup](https://mandroidubey.medium.com/testing-isnt-a-one-time-setup-a9b9ad9df20e) |
-| 13 | `feature/snapshot-testing` | Paparazzi UI tests |
+| 13 | `feature/snapshot-testing` | Paparazzi UI tests | [Trusting the Pixels: A Snapshot Testing Turn](https://medium.com/@mandroidubey/trusting-the-pixels-a-snapshot-testing-turn-89553f3daf70) |
 
 ### Branch Rules
 
